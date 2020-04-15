@@ -1,0 +1,22 @@
+{
+  "name": "biopeeps-dev-shizzle",
+  "version": "0.0.13",
+  "description": "Fonties meets socket.io, videobellen en biosignals",
+  "main": "start-server.js",
+  "scripts": {
+    "onward": "nodemon start-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Slavatar Syurimi",
+  "license": "ISC",
+  "dependencies": {
+    "count-interval": "^1.0.1",
+    "ejs": "^3.0.1",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "johnny-five": "^1.4.0",
+    "nodemon": "^2.0.2",
+    "rxjs": "^6.5.4",
+    "socket.io": "^2.3.0"
+  }
+}

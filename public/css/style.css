@@ -1,0 +1,52 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#welcome .bar {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#renderer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 99;
+    height: 500px;
+    width: 800px;
+    margin-left: -400px;
+    margin-top: -300px;
+}
+
+#waitingdimmer {
+    z-index: 1;
+}
+
+#enter-username {
+    margin-top: 15px;
+    font-size: .75571429em;
+}
+
+#timerOverlay {
+    position: absolute;
+    top: 50%;
+    font-size: 2em;
+    width: 195px;
+    height: 46px;
+    left: 50%;
+    margin-left: -97.5px;
+    margin-top: -362px;
+}
+
+#countdown {
+    color: #f00000;
+    margin-top: 5px;
+    margin-right: 8px;
+}
+
+h1#sessionCompleted {
+    text-align: center;
+}

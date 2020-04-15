@@ -1,0 +1,14 @@
+# Created by .ignore support plugin (hsz.mobi)
+!/package-lock.json
+!/package.json
+!/.idea/
+/node_modules/
+.idea/.gitignore
+.idea/deployment.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/sync.iml
+.idea/vcs.xml
+node_modules/
+public/reset.css
+!/public/semantic/dist/semantic.css

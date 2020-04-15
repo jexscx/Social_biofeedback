@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BioPeeps web interface shizzle!</title>
+    <script src="/socket1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <link rel="stylesheet" href="/static/reset.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/overlays.css">
+
+    <link rel="stylesheet" async type="text/css" href="/static/semantic/dist/semantic.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="/static/semantic/dist/semantic.min.js"></script>
+    <script src="/static/js/script.js"></script>
+    <script src="/static/js/overlays.js"></script>
+
+
+    <script>
+    </script>
+
+</head>
+<body>
+<section id="information" style="display: none">
+    <div class="container-fluid">
+        <div class="row no-gutters">
+            <div class="col-12 col-sm-7"></div>
+
+            <div class="col-12 col-sm-5">
+
+                <div class="TabSignals transform">
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <div class="heartbeat">
+                                <h2>Hartslag</h2>
+                                <div class="value"><h3 id="heartbeat-live"></h3></div>
+                            </div>
+                            <div class="conduction">
+                                <h2>Huidgeleidingsniveau</h2>
+                                <div class="value"><h3 id="skinconductance-live"></h3></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="button" id="SignalsButton" class="button" value="Biosignals"></input>
+                </div>
+
+                <div class="TabNotes notes-transform">
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <div class="indicator">
+
+                            </div>
+                        </div>
+                    </div>
+                    <input type="button" id="NotesButton" class="button" value="Notes"></input>
+                    <div id="note-container">
+                        <h3>Notities</h3>
+                        <form id="note-form">
+                            <div class="form-group">
+                                <label for="patient">Patient</label>
+                                <input type="text" id="patient" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="subjective">Subjective</label>
+                                <textarea id="subjective" class="autoresizing"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="objective">Objective</label>
+                                <textarea id="objective" class="autoresizing"></textarea>
+                            </div>
+                            <div id="biosignaldata-container">
+                                <div>
+                                    <h5>
+                                        Gem. hartslag gedurende sessie: <span id="heartbeat"></span> bpm.
+                                    </h5>
+                                </div>
+                                <div>
+                                    <h5>
+                                        Huidgeleidingsniveau gedurende sessie was
+                                        <span id="skinconductance"></span>.
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="assessment">Assessment</label>
+                                <textarea id="assessment" class="autoresizing"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="plan">Plan</label>
+                                <textarea id="plan" class="autoresizing"></textarea>
+                            </div>
+                            <input type="submit" id="submit-btn" value="Add session" />
+
+                            <span id="alert"></span>
+                        </form>
+                        <div id="view-btn-container">
+                            <button id="view-btn">View sessions</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="stressdetector">
+                    <div class="stress">
+                        <h3>Stress</h3>
+                        <div id="stressColor"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="table-container">
+                <table class="table-info mt-5">
+                    <thead>
+                    <tr>
+                        <th>
+                            Sessie
+                        </th>
+                        <th>
+                            Patient
+                        </th>
+                        <th>
+                            Subjective
+                        </th>
+                        <th>
+                            Objective
+                        </th>
+                        <th>
+                            Biosignals
+                        </th>
+                        <th>
+                            Assessment
+                        </th>
+                        <th>
+                            Plan
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="note-list"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="timerOverlay" style="display: none;"><span id="countdown" class="value">00:00</span>
+
+    <button id="stopBtn" class="ui tiny red button" style="
+">Beeindig sessie</button>
+
+</div>
+
+<section id="welcome">
+    <div class="bar"><h1 id="main" class="ui header">
+            Welcome to the BioPeeps system
+            <% if (locals.activesession) { %>
+                <div class="sub header">There is already a session in progress. Please wait for it to finish</div>
+            <% } else { %>
+
+            <div id="sign-in-tooltip" class="sub header">Sign into a video session using the buttons below</div>
+                <div class="ui mini input" >
+                    <input type="text" placeholder="Enter your name" id="enter-username">
+                </div>
+            <% } %>
+        </h1>
+    </div>
+
+    <div id="waiting" class="ui segment" style="height: 100px; display: none">
+        <div id="waitingdimmer" class="ui active dimmer">
+            <div id="waitingtext" class="ui medium text loader">Waiting for the other party to confirm</div>
+        </div>
+        <p></p>
+        <p></p>
+    </div>
+
+
+
+    <% if(!locals.activesession) { %>
+    <div id="sign-in-buttons" class="ui massive buttons">
+        <button id="join-client" class="ui<% if(locals.joinedpool.client) { %> disabled<% } %> positive button" onclick="joinSession('client')">Join as a client</button>
+        <div class="or"></div>
+        <button id="join-therapist" class="ui<% if(locals.joinedpool.therapist) { %> disabled<% } %> yellow button" onclick="joinSession('therapist')">Join as a therapist</button>
+    </div>
+    <% } %>
+
+    <h1 class="ui header" id="sessionCompleted" style="display: none">
+     BioPeeps system
+            <div class="sub header">The session is completed after a duration of <span id="completedDuration"></span></div>
+    </h1>
+
+
+</section>
+<div id="video-container" style="display: none;"><div id="renderer"></div>
+</div>
+
+
+<script>function hoi(status) {
+    console.log(status);
+       return;
+    }</script>
+<script src="https://static.vidyo.io/latest/javascript/VidyoClient/VidyoClient.js?onload=hoi&webrtc=true&plugin=false"></script>
+
+</body>
+</html>
